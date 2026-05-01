@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # tkinter is usually bundled; on Ubuntu we may need to install it
+      - name: Install tkinter (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-tk xvfb
+
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run tests (Linux — virtual display)
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum pytest tests/ -v
+
+      - name: Run tests (Windows / macOS)
+        if: runner.os != 'Linux'
+        run: pytest tests/ -v

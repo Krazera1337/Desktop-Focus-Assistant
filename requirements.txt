@@ -1,0 +1,22 @@
+# focus-assistant — Python dependencies
+#
+# Core (stdlib only — no extra install needed):
+#   tkinter, threading, time, json, os, platform, subprocess, signal
+#
+# Optional — install only what applies to your OS:
+
+# Windows toast notifications (optional, Windows only)
+# win10toast>=0.9
+
+# macOS: uses osascript + AppKit (pre-installed on macOS)
+# No extra packages needed on macOS.
+
+# Linux: requires xdotool for window detection
+#   sudo apt install xdotool notify-send
+#   (or equivalent for your distro)
+
+# If you want a richer notification library (cross-platform):
+# plyer>=2.1.0
+
+# Dev / testing
+pytest>=7.4
